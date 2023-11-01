@@ -5,7 +5,7 @@ public class ObjTanque {
     int y; //posicion y
     float angulo; //angulo
     
-         
+    
     
     
     public ObjTanque()
