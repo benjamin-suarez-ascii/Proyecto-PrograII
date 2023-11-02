@@ -8,6 +8,8 @@ package com.sebabenja.proyectotanques;
 import java.awt.Color;
 //trabaja con dimensiones
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 //modifica el panel de la pnatalla.
 import javax.swing.JPanel;
 // aqui se configura la pantalla.
@@ -33,7 +35,7 @@ public class JuegoConf extends JPanel {
         CicloProgra.start();
         Iniciar();
     }
-
+   
     public void Iniciar(){
         //procesos del programa
         
@@ -43,7 +45,8 @@ public class JuegoConf extends JPanel {
             
             GameUpdate();
             
-            GameDraw();
+            //con esto se puede llamar al meotodo paintComponent  
+            repaint();
         }
     }
    
@@ -52,12 +55,30 @@ public class JuegoConf extends JPanel {
         System.out.println("Cargando");
     } 
     
+    //maneja cosas
     public void GameUpdate(){
         
     }
-    //dibuja las cosas para el juego
-    public void GameDraw(){
     
+    //dibuja las cosas para el juego
+    @Override
+    
+    //metodo de awt que sirve para dibujar graficos
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        
+        //ete sech 
+        Graphics2D g2 = (Graphics2D)g;
+        
+        //Luigi
+        g2.setColor(Color.white);
+        g2.fillRect(32,0,128,32);
+        g2.fillRect(0,32,192,96);
+        g2.fillRect(32,128,128,32);
+        //dibuja un rectangulo (auque dibuje una L)
+        g2.setColor(Color.green);
+        g2.fillRect(64,32,32,96);
+        g2.fillRect(96,96,32,32);
     }
     
 }

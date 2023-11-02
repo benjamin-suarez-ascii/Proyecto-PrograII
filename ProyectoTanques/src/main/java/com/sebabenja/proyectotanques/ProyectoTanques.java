@@ -22,6 +22,7 @@ public class ProyectoTanques {
         pantalla.add(Juego);
         pantalla.pack();
         
+        //aqui inicia lo del thread y eso
         Juego.IniciarCiclo();
         
     }
