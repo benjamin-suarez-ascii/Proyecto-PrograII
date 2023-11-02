@@ -70,7 +70,7 @@ public class JuegoConf extends JPanel {
         //ete sech 
         Graphics2D g2 = (Graphics2D)g;
         
-        //Luigi
+        //L de Luigi
         g2.setColor(Color.white);
         g2.fillRect(32,0,128,32);
         g2.fillRect(0,32,192,96);
