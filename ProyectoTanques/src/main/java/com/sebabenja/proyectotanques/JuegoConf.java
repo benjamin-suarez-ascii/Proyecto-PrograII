@@ -12,14 +12,14 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 // aqui se configura la pantalla.
 
-public class PantaConf extends JPanel {
+public class JuegoConf extends JPanel {
     final int tamCasilla = 16;
     final int P_ancho = 320;
     final int  P_alto = 240;
     
     Thread CicloProgra;
     
-    public PantaConf(){
+    public JuegoConf(){
         //setea el tamaño
         this.setPreferredSize(new Dimension(P_ancho,P_alto));
         //color de fondo
@@ -31,25 +31,31 @@ public class PantaConf extends JPanel {
     public void IniciarCiclo(){
         CicloProgra = new Thread(this.CicloProgra);
         CicloProgra.start();
+        Iniciar();
     }
 
-    public void Programajava(){
+    public void Iniciar(){
         //procesos del programa
+        
         GameLoad();
         while (CicloProgra != null){
+            //System.out.println("se esta ejectuando");
+            
             GameUpdate();
-            System.out.print("se esta ejectuando");
+            
             GameDraw();
         }
     }
-   public void GameLoad(){
    
-   } 
+    //cargar elementos del juego(Graficos, variables, etc...)
+    public void GameLoad(){
+        System.out.println("Cargando");
+    } 
     
     public void GameUpdate(){
-    
+        
     }
-    
+    //dibuja las cosas para el juego
     public void GameDraw(){
     
     }

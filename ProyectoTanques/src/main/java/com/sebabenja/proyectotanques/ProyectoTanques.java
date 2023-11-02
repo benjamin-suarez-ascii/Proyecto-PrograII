@@ -18,9 +18,11 @@ public class ProyectoTanques {
         pantalla.setTitle("Progra2");
         
         //se llama a la configuracion
-        PantaConf Pinti = new PantaConf();
-        pantalla.add(Pinti);
+        JuegoConf Juego = new JuegoConf();
+        pantalla.add(Juego);
         pantalla.pack();
+        
+        Juego.IniciarCiclo();
         
     }
 }
