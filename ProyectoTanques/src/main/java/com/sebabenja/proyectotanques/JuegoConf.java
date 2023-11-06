@@ -16,8 +16,15 @@ import javax.swing.JPanel;
 
 public class JuegoConf extends JPanel {
     final int tamCasilla = 16;
-    final int P_ancho = 320;
-    final int  P_alto = 240;
+    final int P_ancho = 480;
+    final int  P_alto = 320;
+    
+    int hsp = 0;
+    int vsp = 0;
+    int dir1 = 1;
+    int dir2 = 1;
+            
+    int FPS = 60;
     
     Thread CicloProgra;
     
@@ -38,6 +45,8 @@ public class JuegoConf extends JPanel {
    
     public void Iniciar(){
         //procesos del programa
+        double IntervaloDibujo = 1000000000/FPS; //si
+        double sigDibu = System.nanoTime() + IntervaloDibujo;
         
         GameLoad();
         while (CicloProgra != null){
@@ -47,17 +56,48 @@ public class JuegoConf extends JPanel {
             
             //con esto se puede llamar al meotodo paintComponent  
             repaint();
+           
+            try {
+                double remaningTime = sigDibu - System.nanoTime();
+                remaningTime = remaningTime/1000000;
+                
+                if(remaningTime < 0){
+                    
+                    remaningTime = 0;
+                }
+                Thread.sleep((long)remaningTime);
+                sigDibu += IntervaloDibujo;
+                System.out.println((long)remaningTime);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+                
+            }
         }
     }
    
     //cargar elementos del juego(Graficos, variables, etc...)
     public void GameLoad(){
         System.out.println("Cargando");
+        
     } 
     
     //maneja cosas
     public void GameUpdate(){
         
+        
+        if (this.vsp >= 320-160){
+            this.dir2 = -1;
+        }else if (this.vsp < 0) {
+            this.dir2 = 1;
+            }
+        
+        if (this.hsp >= 480-192){
+            this.dir1 = -1;
+        }else if (this.hsp < 0) {
+            this.dir1 = 1;
+            }
+        this.hsp += this.dir1;
+        this.vsp += this.dir2;
     }
     
     //dibuja las cosas para el juego
@@ -72,13 +112,23 @@ public class JuegoConf extends JPanel {
         
         //L de Luigi
         g2.setColor(Color.white);
-        g2.fillRect(32,0,128,32);
-        g2.fillRect(0,32,192,96);
-        g2.fillRect(32,128,128,32);
+        g2.fillRect(32+this.hsp,0+this.vsp,128,32);
+        g2.fillRect(0+this.hsp,32+this.vsp,192,96);
+        g2.fillRect(32+this.hsp,128+this.vsp,128,32);
         //dibuja un rectangulo (auque dibuje una L)
         g2.setColor(Color.green);
-        g2.fillRect(64,32,32,96);
-        g2.fillRect(96,96,32,32);
+        g2.fillRect(64+this.hsp,32+this.vsp,32,96);
+        g2.fillRect(96+this.hsp,96+this.vsp,32,32);
+        //ahora pequeña
+        g2.setColor(Color.white);
+        g2.fillRect(2,0,8,2);
+        g2.fillRect(0,2,12,6);
+        g2.fillRect(2,8,8,2);
+        //dibuja un rectangulo (auque dibuje una L)
+        g2.setColor(Color.green);
+        g2.fillRect(4,2,2,6);
+        g2.fillRect(6,6,2,2);
+        
     }
     
 }
