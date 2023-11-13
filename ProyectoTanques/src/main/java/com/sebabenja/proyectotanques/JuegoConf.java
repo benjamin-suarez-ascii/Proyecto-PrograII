@@ -14,19 +14,27 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 // aqui se configura la pantalla.
 
+
+
 public class JuegoConf extends JPanel {
     final int tamCasilla = 16;
-    final int P_ancho = 480;
-    final int  P_alto = 320;
+    final int P_ancho = 640;
+    final int  P_alto = 480;
     
+    int contador = 0;
     int hsp = 0;
     int vsp = 0;
     int dir1 = 1;
     int dir2 = 1;
-            
+    
+    KeyHandler KeyH = new KeyHandler();
+    
+    //fotogramas por segundo        
     int FPS = 60;
     
+    //se crea el hilo del cicloProgra
     Thread CicloProgra;
+    ObjTanque player1 = new ObjTanque(45,35,1);
     
     public JuegoConf(){
         //setea el tamaño
@@ -35,8 +43,12 @@ public class JuegoConf extends JPanel {
         this.setBackground(Color.black);
         //toca investigar 
         this.setDoubleBuffered(true);
+        
+        this.addKeyListener(KeyH);
+        this.setFocusable(true);
     }
-
+    
+    //función para inicar el juego
     public void IniciarCiclo(){
         CicloProgra = new Thread(this.CicloProgra);
         CicloProgra.start();
@@ -44,31 +56,42 @@ public class JuegoConf extends JPanel {
     }
    
     public void Iniciar(){
-        //procesos del programa
-        double IntervaloDibujo = 1000000000/FPS; //si
-        double sigDibu = System.nanoTime() + IntervaloDibujo;
+        //procesos del programa  
+        
+        //nanosegundos por fotograma
+        double IntervaloPorDibujo = 1000000000/FPS; //si
+        
+        //los nanoseugndos a tiempo real
+        double sigDibu = System.nanoTime() + IntervaloPorDibujo;
         
         GameLoad();
+        ///por mientras el hilo este activo
         while (CicloProgra != null){
             //System.out.println("se esta ejectuando");
             
+            //procesos de actualizacion
             GameUpdate();
             
             //con esto se puede llamar al meotodo paintComponent  
             repaint();
-           
+        
             try {
-                double remaningTime = sigDibu - System.nanoTime();
-                remaningTime = remaningTime/1000000;
                 
-                if(remaningTime < 0){
+                //lo que sobra brothers
+                double TiempoRestante = sigDibu - System.nanoTime();
+                
+                // ya no cacho muchacho, pero se vuelve a dividir
+                TiempoRestante = TiempoRestante/1000000;
+                
+                if(TiempoRestante < 0){
                     
-                    remaningTime = 0;
+                    TiempoRestante = 0;
                 }
-                Thread.sleep((long)remaningTime);
-                sigDibu += IntervaloDibujo;
-                System.out.println((long)remaningTime);
+                Thread.sleep((long)TiempoRestante);
+                sigDibu += IntervaloPorDibujo;
+                
             }catch (InterruptedException e){
+               //por si facha muchacho
                 e.printStackTrace();
                 
             }
@@ -81,23 +104,29 @@ public class JuegoConf extends JPanel {
         
     } 
     
-    //maneja cosas
+    //EL APDEIT
     public void GameUpdate(){
         
+        player1.Moverse(KeyH);
         
-        if (this.vsp >= 320-160){
+        if (this.vsp >= this.getSize().getHeight()-160){
             this.dir2 = -1;
         }else if (this.vsp < 0) {
             this.dir2 = 1;
             }
         
-        if (this.hsp >= 480-192){
+        if (this.hsp >= this.getSize().getWidth()-192){
             this.dir1 = -1;
         }else if (this.hsp < 0) {
             this.dir1 = 1;
             }
+        
+        
         this.hsp += this.dir1;
         this.vsp += this.dir2;
+       
+        
+        
     }
     
     //dibuja las cosas para el juego
@@ -109,6 +138,8 @@ public class JuegoConf extends JPanel {
         
         //ete sech 
         Graphics2D g2 = (Graphics2D)g;
+        
+        player1.Dibujar(g);
         
         //L de Luigi
         g2.setColor(Color.white);
@@ -128,7 +159,7 @@ public class JuegoConf extends JPanel {
         g2.setColor(Color.green);
         g2.fillRect(4,2,2,6);
         g2.fillRect(6,6,2,2);
-        
+        g2.dispose();
     }
     
 }
