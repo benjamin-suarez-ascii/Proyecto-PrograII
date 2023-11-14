@@ -21,12 +21,7 @@ public class JuegoConf extends JPanel {
     final int P_ancho = 640;
     final int  P_alto = 480;
     
-    int contador = 0;
-    int hsp = 0;
-    int vsp = 0;
-    int dir1 = 1;
-    int dir2 = 1;
-    
+    //controles
     KeyHandler KeyH = new KeyHandler();
     
     //fotogramas por segundo        
@@ -34,7 +29,14 @@ public class JuegoConf extends JPanel {
     
     //se crea el hilo del cicloProgra
     Thread CicloProgra;
+    
+    int contador = 0;
+    int hsp = 0;
+    int vsp = 0;
+    int dir1 = 1;
+    int dir2 = 1;
     ObjTanque player1 = new ObjTanque(45,35,1);
+   
     
     public JuegoConf(){
         //setea el tamaño
@@ -44,6 +46,7 @@ public class JuegoConf extends JPanel {
         //toca investigar 
         this.setDoubleBuffered(true);
         
+        //hace que el panel pueda leer las teclas
         this.addKeyListener(KeyH);
         this.setFocusable(true);
     }
@@ -107,8 +110,11 @@ public class JuegoConf extends JPanel {
     //EL APDEIT
     public void GameUpdate(){
         
+        //se llama al metodo moverse del player 1
         player1.Moverse(KeyH);
         
+        
+        //para que la L de luigi rebote
         if (this.vsp >= this.getSize().getHeight()-160){
             this.dir2 = -1;
         }else if (this.vsp < 0) {
@@ -139,6 +145,7 @@ public class JuegoConf extends JPanel {
         //ete sech 
         Graphics2D g2 = (Graphics2D)g;
         
+        //metodo dibujar del jugador
         player1.Dibujar(g);
         
         //L de Luigi

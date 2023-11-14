@@ -5,7 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener{
-     
+    
+    //lista de botones
     public boolean J1_up , J2_up , J1_down, J2_down , J1_left, J2_left , J1_right, J2_right; 
 
     @Override

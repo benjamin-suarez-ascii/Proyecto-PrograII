@@ -1,6 +1,6 @@
 package com.sebabenja.proyectotanques;
 
-public class Fisico{
+public class Entidad{
    int x = 0;   //Posición X
    int y = 0;   //posicion Y
    int ancho;   //Ancho del rectangulo
@@ -8,7 +8,7 @@ public class Fisico{
    int radio;   //radio de circulo
    String Tipo; //Rectangulo ; Circulo
    
-   //Mask
+   //Mask de Hitbox
    int BoxLeft; 
    int BoxRight;
    int BoxUp;
@@ -16,8 +16,8 @@ public class Fisico{
    
    
    
-   
-   public Fisico(int _x, int _y, String _tipo){
+   //constructor
+   public Entidad(int _x, int _y, String _tipo){
       this.x = _x;
       this.y = _y;
       this.Tipo = _tipo;
@@ -28,6 +28,7 @@ public class Fisico{
       this.y = _y;
    }
    
+   //se setea el objeto como rectangulo
    public void setRectangulo(int _w, int _h){
       if (this.Tipo == "Rectangulo" ){ 
          this.ancho = _w;
@@ -57,8 +58,8 @@ public class Fisico{
       return this.x;
     }
    
-
-   public void ColiRec(Fisico _objeto){
+   //colicion pero solo rectangular 
+   public void ColiRec(Entidad _objeto){
       if (this.BoxLeft > _objeto.BoxRight && this.BoxRight < _objeto.BoxLeft 
       && this.BoxUp > _objeto.BoxDown && this.BoxDown < _objeto.BoxUp);
    }
