@@ -3,11 +3,11 @@ package com.sebabenja.proyectotanques;
 import java.awt.image.BufferedImage;
 
 public class Entidad{
-   int id;      //id del objeto
-   int x = 0;   //Posición X
-   int y = 0;   //posicion Y
-   int cx = 0;
-   int cy = 0;
+   int id;   //id del objeto
+   int x ;   //Posición X
+   int y ;   //posicion Y
+   int cx;
+   int cy;
    public BufferedImage SprObj;
    //constructor
    public Entidad(int _id ,int _x, int _y, int _cx, int _cy){
@@ -21,6 +21,13 @@ public class Entidad{
    public void setPosicion( int _x, int _y){
       this.x = _x;
       this.y = _y;
+   }
+   
+   public void update()
+   {}
+   
+   public double distancia(Entidad E){
+       return Math.sqrt(Math.pow(Math.abs(E.x - this.x),2) + Math.pow( Math.abs(E.y - this.y),2));
    }
 }
    
@@ -52,16 +59,27 @@ class ERectangulo extends Entidad{
    public void ColiRec(ERectangulo _objeto){
       if (this.BoxLeft > _objeto.BoxRight && this.BoxRight < _objeto.BoxLeft 
       && this.BoxUp > _objeto.BoxDown && this.BoxDown < _objeto.BoxUp);
+      
    }
-   
+  
 }
 
 class ECirculo extends Entidad{
    int radio;   //radio de circulo
+   
    public ECirculo(int _id ,int _x,int _y,int _r){
       super(_id, _x, _y,0,0);
       this.radio = _r;
       }
+   
+   public boolean ColiCir(ECirculo C) {
+	   if (this.radio + C.radio > this.distancia(C)){
+		   return (true);
+	   }
+	   return (false);
+   }
 }
+
+
   
   

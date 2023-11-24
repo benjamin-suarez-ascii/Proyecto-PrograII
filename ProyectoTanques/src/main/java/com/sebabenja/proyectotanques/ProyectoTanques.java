@@ -6,6 +6,7 @@ public class ProyectoTanques {
 
     public static void main(String[] args) {
         
+    	
         //se crea un objeto Jframe que es la pantalla
         JFrame pantalla = new JFrame();
         //se crea un objeto de juego para ejecutarlo

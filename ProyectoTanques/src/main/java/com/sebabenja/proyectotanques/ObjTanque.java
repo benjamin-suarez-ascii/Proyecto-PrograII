@@ -2,82 +2,144 @@ package com.sebabenja.proyectotanques;
 
 
 import java.io.IOException;
-import java.awt.Graphics;
+import java.util.LinkedList;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import javax.imageio.ImageIO;
 
 
 public class ObjTanque extends ECirculo {
-    double velH;
-    double velV;
-    double giro;
-    double subx;
-    double suby;
-    int MovSpd = 1;
-    float subangle = 0;
-    int subpix = 4;
+    
+	int vida = 3;
+	double velH; double velV;
+    double giro; double subx; double suby;
+    int MovSpd = 10; int velangle = 25; float subangle = 0; int subpix = 4;
+    boolean kup,kdown,kleft,kright;
+    boolean shoot = true;
+    LinkedList<Balas> LBala = new LinkedList<Balas>();
     //giro
     //KeyHandler keys;
     
-    public ObjTanque(int _id, int _x, int _y, int _angulo /*,KeyHandler _keys*/){ 
-      super(_id , _x, _y, 30 );
+    public ObjTanque(int _id, int _x, int _y, int _angulo){ 
+      super(_id , _x, _y, 17 );
       this.giro = _angulo;
-      //this.keys = _keys;
+      this.subangle = _angulo*10;
+      this.subx = _x*subpix;
+      this.suby = _y*subpix;
      
+      //this.keys = _keys;
       setImage();
     }
     
+   
+    
     public void Moverse(KeyHandler keys){
        
-        
+    	if (this.id == 1) {
+    		this.kup = keys.J1_up;
+    		this.kdown = keys.J1_down;
+    		this.kleft = keys.J1_left;
+    		this.kright = keys.J1_right;
+    	} else {
+    		this.kup = keys.J2_up;
+    		this.kdown = keys.J2_down;
+    		this.kleft = keys.J2_left;
+    		this.kright = keys.J2_right;
+    	}
+    	
+    	
         //aun anda muy bug esta cosa.
-        if (keys.J1_up && !keys.J1_down){
+        if (this.kup && !this.kdown){
             this.velH = MovSpd*Math.cos(Math.toRadians(giro)); 
             this.velV = MovSpd*Math.sin(Math.toRadians(giro));
         }
         //esta cosa hay que configurarla bien
-        else if (keys.J1_down && !keys.J1_up){
+        else if (this.kdown && !this.kup){
             this.velH = -MovSpd*Math.cos(Math.toRadians(giro)); 
             this.velV = -MovSpd*Math.sin(Math.toRadians(giro));
         }
         //esto es para que no se mueva al inifito
         else {this.velH = 0; this.velV = 0;}
         
-        if (keys.J1_right){subangle += -3;}
+        if (this.kleft){subangle += -velangle;}
         
-        if (keys.J1_left) {subangle += 3;}
-        
+        if (this.kright) {subangle += velangle;}
         
         this.giro = Math.floor(subangle/10);
         if (subangle > 359*10){
             subangle = 0;
         }
         else if (subangle < 0){
-            subangle = 359*10;
+            this.subangle = 359*10;
         }
         
-        System.out.println(subangle);
-        System.out.println(giro);
+        if (this.x+this.velH <= 0)
+		{this.velH = 0;}
+        if (this.y+this.velV <= 0)
+		{this.velV = 0;}
+        if (this.x+this.velH >= 640)
+		{this.velH = 0;}
+        if (this.y+this.velV >= 480)
+		{this.velV = 0;}
+        
+        
+        //System.out.println(subangle);
+        //System.out.println(giro);
         this.subx += this.velH;
         this.suby += this.velV;
         
         this.x = (int)Math.floor(this.subx/subpix);
         this.y = (int)Math.floor(this.suby/subpix);
         
+        for (Balas A : this.LBala)
+        {
+        	A.update();
+        	if (A.duracion < 0) {
+        		this.LBala.remove(A);
+        	}
+        }
+        
     }
    
     public void Disparar(){
+    	
+    	if (this.LBala.size() < 100000){
+    		this.LBala.add(new Balas(this.id, 1, 10 , this.x, this.y, this.giro));
+    	}	
+    }
+    
+    public boolean RecibirDaño(ObjTanque T){
+    	for(Balas A: T.LBala)
+    	{
+    		if (this.ColiCir(A))
+    		{
+    			T.LBala.remove(A);
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public void ColiTank(ObjTanque e){
+        if (this.id != e.id ){	
+    		if (this.ColiCir(e)){
+        			this.subx = (this.x - this.velH)*subpix;
+        			this.suby = (this.y - this.velV)*subpix;
+        			this.velH = 0;
+        			this.velV = 0;}
+        	}
         
     }
     
     public void setImage(){
         
         try{
-           SprObj = ImageIO.read(getClass().getResourceAsStream("/Images/SprPlayer1.png"));
+           if (this.id == 1) {
+        	this.SprObj = ImageIO.read(getClass().getResourceAsStream("/Images/SprPlayer1.png"));}
+           else
+           {this.SprObj = ImageIO.read(getClass().getResourceAsStream("/Images/SprPlayer2.png"));	}
         }
         catch(IOException e){
             e.printStackTrace();
@@ -85,17 +147,10 @@ public class ObjTanque extends ECirculo {
     }
     
     public void Dibujar(Graphics2D Sprite){
-      
-      /*Sprite.setColor(Color.red);
-      //circulo
-      Sprite.fillOval(this.x,this.y,32,32);
-      Sprite.rotate(Math.toRadians(giro));
-      Sprite.setColor(Color.blue);
-      Sprite.fillRect(this.x+8,this.y+8,32,16);
-      Sprite.rotate(Math.toRadians(0));
-      
-      //la cosa de la rotacion que no se usarla bien
-      */
+    	for (Balas A : this.LBala){
+        	A.Dibujar(Sprite);
+        }
+    	
       BufferedImage image = null;
       
       image = this.SprObj;
@@ -106,7 +161,8 @@ public class ObjTanque extends ECirculo {
       AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
       
       image = op.filter(image, null);
-      Sprite.drawImage(image, this.x, this.y,image.getWidth(),image.getHeight(),null);
+      Sprite.drawImage(image, this.x-radio, this.y-radio,image.getWidth()/2,image.getHeight()/2,null);
+      
       
     }   
 

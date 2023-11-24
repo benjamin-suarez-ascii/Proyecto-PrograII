@@ -4,12 +4,20 @@
  */
 package com.sebabenja.proyectotanques;
 
+
+import java.util.LinkedList;
 //setea colores
 import java.awt.Color;
+
+
 //trabaja con dimensiones
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 //modifica el panel de la pnatalla.
 import javax.swing.JPanel;
 // aqui se configura la pantalla.
@@ -20,6 +28,11 @@ public class JuegoConf extends JPanel {
     final int tamCasilla = 16;
     final int P_ancho = 640;
     final int  P_alto = 480;
+    private static final String ARCHIVO = "puntuaciones.bin";
+    static int disparosRealizadosp1 = 0;
+    static int disparosRealizadosp2 = 0;
+    static int disparosRecibidosp1 = 0;
+    static int disparosRecibidosp2 = 0;
     
     //controles
     KeyHandler KeyH = new KeyHandler();
@@ -31,12 +44,11 @@ public class JuegoConf extends JPanel {
     Thread CicloProgra;
     
     int contador = 0;
-    int hsp = 0;
-    int vsp = 0;
-    int dir1 = 1;
-    int dir2 = 1;
-    ObjTanque player1 = new ObjTanque(1,45,35,1);
-   
+    
+    
+    LinkedList<Balas> Abalas = new LinkedList<>();
+    LinkedList<ObjTanque> tank = new LinkedList<>();
+    
     
     public JuegoConf(){
         //setea el tamaño
@@ -104,6 +116,8 @@ public class JuegoConf extends JPanel {
     //cargar elementos del juego(Graficos, variables, etc...)
     public void GameLoad(){
         System.out.println("Cargando");
+        tank.add( new ObjTanque(1,1,1,1));
+        tank.add(new ObjTanque(2,600,450,180));
         
     } 
     
@@ -111,7 +125,46 @@ public class JuegoConf extends JPanel {
     public void GameUpdate(){
         
         //se llama al metodo moverse del player 1
-        player1.Moverse(KeyH);
+        
+    	try {
+    		for (ObjTanque A : tank) {
+    			
+    			A.Moverse(KeyH);
+    			switch(A.id) {
+    			case 1:
+    				A.ColiTank(tank.get(1));
+    				if (KeyH.J1_shoot){
+    					A.Disparar();
+    				}
+    				if (A.RecibirDaño(tank.get(1))){
+    					A.vida -= 1;
+    					disparosRealizadosp1 += 1;
+    					
+    				}
+    			break;
+    			case 2: 
+    				A.ColiTank(tank.get(0));
+    				if (KeyH.J2_shoot){
+    					A.Disparar();
+    				}
+    				if (A.RecibirDaño(tank.get(0))){
+    					A.vida -= 1;
+    					disparosRealizadosp2 += 1;
+    				}
+    					break;
+    			
+    			
+    			}
+    		if (A.vida <= 0) {
+    			tank.remove(A);
+    			escribirPuntuacion();
+    		}
+    		}}catch(Exception E) {}
+    	
+    	
+        
+        
+        
     }
     
     //dibuja las cosas para el juego
@@ -125,12 +178,34 @@ public class JuegoConf extends JPanel {
         Graphics2D g2 = (Graphics2D)g;
         
         //metodo dibujar del jugador
-        player1.Dibujar(g2);
+        for (ObjTanque A : tank)
+        {
+        	A.Dibujar(g2);
+        	 g2.setColor(Color.white);
+        	switch(A.id){
+        	case 1: g2.drawString(""+A.vida, 0, 470); break;
+        	case 2: g2.drawString(""+A.vida, 600, 470); break;
+        	}
+        	
+        }
         
+        	//player2.Dibujar(g2);
+        
+        
+
         //L de Luigi
-        g2.setColor(Color.white);
+       
        
         g2.dispose();
     }
     
+    private static void escribirPuntuacion() throws IOException {
+        try (DataOutputStream out = new DataOutputStream(new FileOutputStream(ARCHIVO, true))) {
+        	out.writeInt(disparosRealizadosp1);
+            out.writeInt(disparosRecibidosp1);
+            out.writeInt(disparosRealizadosp2);
+            out.writeInt(disparosRecibidosp2);
+        }
+    }
+
 }
