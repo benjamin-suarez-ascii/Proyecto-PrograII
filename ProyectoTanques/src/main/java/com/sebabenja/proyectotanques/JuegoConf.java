@@ -35,7 +35,7 @@ public class JuegoConf extends JPanel {
     int vsp = 0;
     int dir1 = 1;
     int dir2 = 1;
-    ObjTanque player1 = new ObjTanque(45,35,1);
+    ObjTanque player1 = new ObjTanque(1,45,35,1);
    
     
     public JuegoConf(){
@@ -112,27 +112,6 @@ public class JuegoConf extends JPanel {
         
         //se llama al metodo moverse del player 1
         player1.Moverse(KeyH);
-        
-        
-        //para que la L de luigi rebote
-        if (this.vsp >= this.getSize().getHeight()-160){
-            this.dir2 = -1;
-        }else if (this.vsp < 0) {
-            this.dir2 = 1;
-            }
-        
-        if (this.hsp >= this.getSize().getWidth()-192){
-            this.dir1 = -1;
-        }else if (this.hsp < 0) {
-            this.dir1 = 1;
-            }
-        
-        
-        this.hsp += this.dir1;
-        this.vsp += this.dir2;
-       
-        
-        
     }
     
     //dibuja las cosas para el juego
@@ -146,26 +125,11 @@ public class JuegoConf extends JPanel {
         Graphics2D g2 = (Graphics2D)g;
         
         //metodo dibujar del jugador
-        player1.Dibujar(g);
+        player1.Dibujar(g2);
         
         //L de Luigi
         g2.setColor(Color.white);
-        g2.fillRect(32+this.hsp,0+this.vsp,128,32);
-        g2.fillRect(0+this.hsp,32+this.vsp,192,96);
-        g2.fillRect(32+this.hsp,128+this.vsp,128,32);
-        //dibuja un rectangulo (auque dibuje una L)
-        g2.setColor(Color.green);
-        g2.fillRect(64+this.hsp,32+this.vsp,32,96);
-        g2.fillRect(96+this.hsp,96+this.vsp,32,32);
-        //ahora pequeña
-        g2.setColor(Color.white);
-        g2.fillRect(2,0,8,2);
-        g2.fillRect(0,2,12,6);
-        g2.fillRect(2,8,8,2);
-        //dibuja un rectangulo (auque dibuje una L)
-        g2.setColor(Color.green);
-        g2.fillRect(4,2,2,6);
-        g2.fillRect(6,6,2,2);
+       
         g2.dispose();
     }
     
