@@ -94,8 +94,10 @@ public class ObjTanque extends ECirculo {
         this.y = (int)Math.floor(this.suby/subpix);
         
         for (Balas A : this.LBala)
-        {
+        {	
+        	
         	A.update();
+        	A.balaspego(A);
         	if (A.duracion < 0) {
         		this.LBala.remove(A);
         	}
@@ -105,7 +107,7 @@ public class ObjTanque extends ECirculo {
    
     public void Disparar(){
     	
-    	if (this.LBala.size() < 100000){
+    	if (this.LBala.size() < 10){
     		this.LBala.add(new Balas(this.id, 1, 10 , this.x, this.y, this.giro));
     	}	
     }

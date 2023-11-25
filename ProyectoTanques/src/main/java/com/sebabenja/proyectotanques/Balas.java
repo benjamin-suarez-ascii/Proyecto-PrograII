@@ -27,8 +27,17 @@ public class Balas extends ECirculo{
         this.y += this.velocidad * Math.sin(Math.toRadians(angulo));
         this.duracion -= 1;
         
+        
     }
 	
+	public void balaspego(Balas A) {
+		if (this.ColiCir(A))
+		{
+			if (this.id != A.id) 
+			{A.duracion = -1; this.duracion = -1;}
+			
+		}
+	}
 	
 public void setImage(){
         

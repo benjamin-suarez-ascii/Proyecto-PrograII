@@ -205,6 +205,7 @@ public class JuegoConf extends JPanel {
             out.writeInt(disparosRecibidosp1);
             out.writeInt(disparosRealizadosp2);
             out.writeInt(disparosRecibidosp2);
+            System.out.println("se guardo el archivo");
         }
     }
 
